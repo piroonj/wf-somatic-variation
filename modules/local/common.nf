@@ -115,7 +115,10 @@ process annotate_vcf {
             clinvar_vcf="${CLINVAR_PATH}/clinvar_GRCh37.vcf.gz"
         fi
 
-        snpEff -Xmx!{task.memory.giga - 1}g ann -noStats -noLog $snpeff_db ${INPUT_FILENAME} > !{meta.sample}.intermediate.snpeff_annotated.vcf
+        bcftools filter -e 'INFO/END < POS' ${INPUT_FILENAME} -Oz -o filtered.vcf.gz
+        bcftools index filtered.vcf.gz
+
+        snpEff -Xmx!{task.memory.giga - 1}g ann -noStats -noLog $snpeff_db filtered.vcf.gz > !{meta.sample}.intermediate.snpeff_annotated.vcf
         # Add ClinVar annotations
         SnpSift annotate $clinvar_vcf !{meta.sample}.intermediate.snpeff_annotated.vcf | bgzip > !{meta.sample}.wf-${OUTPUT_LABEL}.vcf.gz
         tabix !{meta.sample}.wf-${OUTPUT_LABEL}.vcf.gz
