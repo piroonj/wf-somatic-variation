@@ -321,9 +321,10 @@ process evaluate_candidates {
     // This can go very high, depending on the depth of coverage and size of the dataset.
     label "wf_somatic_snv"
     cpus 1
-    memory { 8.GB * task.attempt }
-    maxRetries 3
-    errorStrategy {task.exitStatus in [137,140] ? 'retry' : 'finish'}
+    memory '16GB'
+    // memory { 8.GB * task.attempt }
+    // maxRetries 3
+    // errorStrategy {task.exitStatus in [137,140] ? 'retry' : 'finish'}
     input:
         tuple val(meta), val(contig), path(phased_bam), path(phased_bam_index), path(phased_vcf), path(phased_tbi), path(command)
         tuple val(meta_2), val(contig_2), path(candidate_bed)
