@@ -166,7 +166,7 @@ process concat_vcfs {
     script:
         def concat_threads = Math.max(task.cpus - 1, 1)
         """
-        bcftools concat --threads ${concat_threads} -O u vcfs/*.vcf.gz | bcftools sort -O z - > ${prefix}.vcf.gz
+        bcftools concat -a --threads ${concat_threads} -O u vcfs/*.vcf.gz | bcftools sort -O z - > ${prefix}.vcf.gz
         tabix -p vcf ${prefix}.vcf.gz
         """
 }
