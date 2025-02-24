@@ -115,10 +115,10 @@ process annotate_vcf {
             clinvar_vcf="${CLINVAR_PATH}/clinvar_GRCh37.vcf.gz"
         fi
 
-        if bcftools view -h input.vcf.gz | grep -q "##INFO=<ID=END"; then
-            bcftools filter -e 'INFO/END < POS' input.vcf.gz -Oz -o filtered.vcf.gz
+        if bcftools view -h ${INPUT_FILENAME} | grep -q "##INFO=<ID=END"; then
+            bcftools filter -e 'INFO/END < POS' ${INPUT_FILENAME} -Oz -o filtered.vcf.gz
         else
-            bcftools annotate -h <(echo '##INFO=<ID=END,Number=1,Type=Integer,Description="End position"') input.vcf.gz -Oz -o temp.vcf.gz &&
+            bcftools annotate -h <(echo '##INFO=<ID=END,Number=1,Type=Integer,Description="End position"') ${INPUT_FILENAME} -Oz -o temp.vcf.gz
             bcftools filter -e 'INFO/END < POS' temp.vcf.gz -Oz -o filtered.vcf.gz
         fi
         bcftools index filtered.vcf.gz
